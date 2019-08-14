@@ -59,19 +59,50 @@ class Validator
 
         $terms = explode('|',$value['terms']);
 
-        foreach ($terms as $term){
+        foreach ($terms as $term):
 
             $term = explode(':',$term);
 
-            if($term[0] == 'required')
-                $this->required($value['title'], $value['value']);
+            switch (trim($term[0])){
 
-            if($term[0] == 'maxLeng')
-                $this->maxLeng($value['title'],$value['value'], $term[1]);
+                case 'required':
+                    $this->required($value['title'], $value['value']);
+                    break;
+                case 'maxLeng':
+                    $this->maxLeng($value['title'],$value['value'], $term[1]);
+                    break;
+                case 'minLeng':
+                    $this->minLeng($value['title'],$value['value'], $term[1]);
+                    break;
+                case 'email':
+                    $this->email($value['value']);
+                    break;
+                case 'url':
+                    $this->url($value['value']);
+                    break;
+            }
 
-            if($term[0] == 'minLeng')
-                $this->minLeng($value['title'],$value['value'], $term[1]);
 
+        endforeach;
+
+    }
+
+    private function email($email)
+    {
+        $check = filter_var($email, FILTER_VALIDATE_EMAIL);
+
+        if(!$check){
+            self::invalid("E-mail inválido!");
+        }
+
+    }
+
+    private function url($email)
+    {
+        $check = filter_var($email, FILTER_VALIDATE_URL);
+
+        if(!$check){
+            self::invalid("URL inválida!");
         }
 
     }
@@ -79,16 +110,14 @@ class Validator
     private function maxLeng($name,$value, $limit)
     {
         if(strlen(trim($value)) > $limit){
-            self::setErrorMessage("O campo {$name} é maior q o permitido.");
-            $this->valid = false;
+            self::invalid("O campo {$name} deve ser preenchido.");
         }
     }
 
     private function minLeng($name,$value, $limit)
     {
         if(strlen(trim($value)) < $limit){
-            self::setErrorMessage("O campo {$name} é menor q o permitido.");
-            $this->valid = false;
+            self::invalid("O campo {$name} deve ser preenchido.");
         }
     }
 
@@ -96,10 +125,17 @@ class Validator
     {
 
         if(trim($value) == ''){
-            self::setErrorMessage("O campo {$name} deve ser preenchido.");
-            $this->valid = false;
+            self::invalid("O campo {$name} deve ser preenchido.");
         }
 
+    }
+
+    /**
+     * @param $msg
+     */
+    private function invalid($msg){
+        self::setErrorMessage($msg);
+        $this->valid = false;
     }
 
     /**
@@ -125,5 +161,6 @@ class Validator
     {
         return $this->errorMessage;
     }
+
 
 }

@@ -1,0 +1,14 @@
+{
+    "name": "matuto/validator",
+    "description": "Validador de formulário simples e eficaz.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matuto",
+            "email": "alissondesign0@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

@@ -2,12 +2,11 @@
 
     require '../Validator.php';
 
-
-    $val = '';
+    $val = 'alisson@email.com';
 
     $validate = new \Validator\Validator();
 
-    $validate->val('Nome', $val, 'required|maxLeng:20|minLeng:3');
+    $validate->val('Nome', $val, 'email');
 
     echo '<pre>';
 
@@ -15,4 +14,3 @@
         echo $validate->getErrorMessage();
 
     echo '</pre>';
-    echo $validate->isValid();
